@@ -5,9 +5,11 @@ from matplotlib import pyplot as plt
 MIN_MATCH_COUNT = 10
 
 #read img
-img1 = cv.imread("right.jpg")
+img1 = cv.imread("output_bottom.jpg")
+img1 = cv.rotate(img1, cv.ROTATE_90_COUNTERCLOCKWISE)
 img1G = cv.cvtColor(img1,cv.COLOR_BGR2GRAY)
-img2 = cv.imread("left.jpg")
+img2 = cv.imread("output_top.jpg")
+img2 = cv.rotate(img2, cv.ROTATE_90_COUNTERCLOCKWISE)
 img2G = cv.cvtColor(img2 ,cv.COLOR_BGR2GRAY)
 
 #start sift process
@@ -27,7 +29,7 @@ matches = flann.knnMatch(des1,des2,k=2)
 # store all the good matches as per Lowe's ratio test.
 good = []
 for m,n in matches:
-    if m.distance < 0.7*n.distance:
+    if m.distance < 0.5*n.distance:
         good.append(m)
 
 if len(good)>MIN_MATCH_COUNT:
@@ -47,8 +49,8 @@ if len(good)>MIN_MATCH_COUNT:
     #draw matched feature point 
     img1G = cv.drawKeypoints(img1G, kp1,img1G,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     img2G = cv.drawKeypoints(img2G, kp2,img2G,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    cv.imwrite('sift_keypoints_right.jpg',img1G)
-    cv.imwrite('sift_keypoints_left.jpg',img2G)
+    cv.imwrite('sift_keypoints_ouput_bottom.jpg',img1G)
+    cv.imwrite('sift_keypoints_output_top.jpg',img2G)
     draw_params = dict(matchColor = (0,255,0), # draw matches in green color
     singlePointColor = None,
     matchesMask = matchesMask, # draw only inliers
