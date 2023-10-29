@@ -67,6 +67,7 @@ plt.subplot(122),plt.imshow(dst),plt.title("Warped Image")
 plt.show()
 plt.figure()
 dst[0:img2.shape[0], 0:img2.shape[1]] = img2
+dst = cv.rotate(dst, cv.ROTATE_90_CLOCKWISE)
 cv.imwrite("output.jpg",dst)
 plt.imshow(dst), plt.title("output")
 plt.show()
