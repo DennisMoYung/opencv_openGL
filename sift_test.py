@@ -2,7 +2,12 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
+import datetime
+
 MIN_MATCH_COUNT = 10
+
+ts = datetime.datetime.now().timestamp()
+show = False
 
 #read img
 img1 = cv.imread("right.jpg")
@@ -42,29 +47,35 @@ if len(good)>MIN_MATCH_COUNT:
 
     #transform shape
     dst = cv.perspectiveTransform(pts,M)
-    img2G = cv.polylines(img2G,[np.int32(dst)],True,255,3, cv.LINE_AA)
 
     #draw matched feature point 
-    img1G = cv.drawKeypoints(img1G, kp1,img1G,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    img2G = cv.drawKeypoints(img2G, kp2,img2G,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    cv.imwrite('sift_keypoints_right.jpg',img1G)
-    cv.imwrite('sift_keypoints_left.jpg',img2G)
-    draw_params = dict(matchColor = (0,255,0), # draw matches in green color
-    singlePointColor = None,
-    matchesMask = matchesMask, # draw only inliers
-        flags = 2)
-    img_ransac = cv.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
-    cv.imwrite('ransac.jpg', img_ransac)
+    if(show):
+        img2G = cv.polylines(img2G,[np.int32(dst)],True,255,3, cv.LINE_AA)
+
+        img1G = cv.drawKeypoints(img1G, kp1,img1G,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        img2G = cv.drawKeypoints(img2G, kp2,img2G,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        cv.imwrite('sift_keypoints_right.jpg',img1G)
+        cv.imwrite('sift_keypoints_left.jpg',img2G)
+        draw_params = dict(matchColor = (0,255,0), # draw matches in green color
+        singlePointColor = None,
+        matchesMask = matchesMask, # draw only inliers
+            flags = 2)
+        img_ransac = cv.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
+        cv.imwrite('ransac.jpg', img_ransac)
 
 else:
   raise AssertionError("Can’t find enough keypoints.")
 
 #output image
 dst = cv.warpPerspective(img1,M,(img2.shape[1] + img1.shape[1], img2.shape[0]))
-plt.subplot(122),plt.imshow(dst),plt.title("Warped Image")
-plt.show()
-plt.figure()
+if(show):
+    plt.subplot(122),plt.imshow(dst),plt.title("Warped Image")
+    plt.show()
+    plt.figure()
 dst[0:img2.shape[0], 0:img2.shape[1]] = img2
 cv.imwrite("output.jpg",dst)
+
+print(datetime.datetime.now().timestamp() - ts, "s")
+
 plt.imshow(dst), plt.title("output")
 plt.show()
