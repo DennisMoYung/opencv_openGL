@@ -59,3 +59,11 @@ print("Total error: ", mean_error / len(objpoints))
 # Save the camera matrix and distortion coefficients
 np.save(r"D:\document\opencv_openGL\cameraCalibration\cameraMatrix.npy", cameraMatrix)
 np.save(r"D:\document\opencv_openGL\cameraCalibration\distCoeffs.npy", distCoeffs)
+
+np.savez(
+    f"D:\document\opencv_openGL\cameraCalibration\CalibrationMatrix_cpt",
+    Camera_matrix=cameraMatrix,
+    distCoeff=distCoeffs,
+    RotationalV=rvecs,
+    TranslationV=tvecs,
+)
