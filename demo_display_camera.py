@@ -1,6 +1,6 @@
 import cv2 as cv
 
-#demo for display video capture (witch delay)
+#demo for display video capture (non-synchronize)
 
 ##please enter the data by your own
 ip_l = ""
